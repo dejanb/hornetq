@@ -1,0 +1,7 @@
+<broker>
+
+  <core configuration="config/standalone/hornetq-configuration.xml"></core>
+
+  <basic-security/>
+
+</broker>
