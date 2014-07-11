@@ -650,8 +650,6 @@ public final class ClusterConnectionImpl implements ClusterConnection, AfterConn
             this.serverLocator.setRetryInterval(retryInterval);
          }
 
-         addClusterTopologyListener(this);
-
          serverLocator.setAfterConnectionInternalListener(this);
 
          serverLocator.setPacketDecoder(ServerPacketDecoder.INSTANCE);
@@ -669,7 +667,8 @@ public final class ClusterConnectionImpl implements ClusterConnection, AfterConn
          HornetQServerLogger.LOGGER.debug("sending notification: " + notification);
          managementService.sendNotification(notification);
       }
-
+      //we add as a listener after we have sent the cluster start notif as the listener may start sending notifs before
+      addClusterTopologyListener(this);
    }
 
    public TransportConfiguration getConnector()
@@ -1040,6 +1039,7 @@ public final class ClusterConnectionImpl implements ClusterConnection, AfterConn
          }
 
          isClosed = true;
+
          clearBindings();
 
          if (disconnected)
@@ -1667,6 +1667,7 @@ public final class ClusterConnectionImpl implements ClusterConnection, AfterConn
    @Override
    public void removeRecord(String targetNodeID)
    {
+      HornetQServerLogger.LOGGER.debug("Removing record for: " + targetNodeID);
       MessageFlowRecord record = records.remove(targetNodeID);
       try
       {
@@ -1681,10 +1682,14 @@ public final class ClusterConnectionImpl implements ClusterConnection, AfterConn
    @Override
    public void disconnectRecord(String targetNodeID)
    {
+      HornetQServerLogger.LOGGER.debug("Disconnecting record for: " + targetNodeID);
       MessageFlowRecord record = records.get(targetNodeID);
       try
       {
-         record.disconnectBindings();
+         if (record != null)
+         {
+            record.disconnectBindings();
+         }
       }
       catch (Exception e)
       {
