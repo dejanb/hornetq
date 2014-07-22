@@ -12,23 +12,26 @@
  */
 package org.hornetq.factory;
 
-import org.hornetq.dto.BasicSecurityDTO;
 import org.hornetq.dto.SecurityDTO;
 import org.hornetq.spi.core.security.HornetQSecurityManager;
-import org.hornetq.spi.core.security.HornetQSecurityManagerImpl;
+import org.hornetq.utils.FactoryFinder;
+
+import javax.xml.bind.annotation.XmlRootElement;
 
 public class SecurityManagerFactory
 {
 
-   public static HornetQSecurityManager create(SecurityDTO config)
+   public static HornetQSecurityManager create(SecurityDTO config) throws Exception
    {
-      if (config instanceof BasicSecurityDTO)
+      if (config != null)
       {
-         return new HornetQSecurityManagerImpl();
+         FactoryFinder finder = new FactoryFinder("META-INF/services/org/hornetq/security/");
+         HornetQSecurityManager manager = (HornetQSecurityManager)finder.newInstance(config.getClass().getAnnotation(XmlRootElement.class).name());
+         return manager;
       }
       else
       {
-         return null;
+         throw new Exception("No security manager configured!");
       }
    }
 

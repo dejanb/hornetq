@@ -38,6 +38,10 @@
          <groupId>io.airlift</groupId>
          <artifactId>airline</artifactId>
       </dependency>
+     <dependency>
+       <groupId>com.fasterxml.jackson.core</groupId>
+       <artifactId>jackson-databind</artifactId>
+     </dependency>
    </dependencies>
 
   <build>
@@ -48,6 +52,13 @@
         <includes>
           <include>**/*</include>
         </includes>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+        <includes>
+          <include>**/*</include>
+        </includes>
+        <filtering>true</filtering>
       </resource>
     </resources>
 

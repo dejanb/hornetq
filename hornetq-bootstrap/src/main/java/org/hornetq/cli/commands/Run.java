@@ -36,7 +36,7 @@ public class Run implements Action
    @Override
    public Object execute(ActionContext context) throws Exception
    {
-      JAXBContext jaxbContext = JAXBContext.newInstance(BrokerDTO.class);
+      JAXBContext jaxbContext = JAXBContext.newInstance("org.hornetq.dto");
       File file = new File("config/hornetq.xml");
 
       Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
